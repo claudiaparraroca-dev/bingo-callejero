@@ -29,9 +29,10 @@ netlify dev          # necesita ANTHROPIC_API_KEY en el entorno o en .env
 
 ## Despliegue (Netlify)
 
-1. Conecta el repo en Netlify (build y publish ya vienen en `netlify.toml`).
-2. En *Site configuration → Environment variables* añade `ANTHROPIC_API_KEY`.
-3. Listo: cada push a `main` despliega.
+En producción: **https://bingo-callejero.netlify.app**
+
+- Netlify inyecta automáticamente la clave de Claude a través de su **AI Gateway** (se consume de los créditos de Netlify), así que no hace falta configurar . Si prefieres usar tu propia clave de Anthropic, añádela en *Project configuration → Environment variables* y tendrá prioridad.
+- Para que cada push a  despliegue solo: *Project configuration → Build & deploy → Link repository* → .
 
 Coste orientativo del árbitro: ~1.000-1.500 tokens de entrada por foto → del orden de medio céntimo por validación.
 
