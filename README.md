@@ -31,8 +31,8 @@ netlify dev          # necesita ANTHROPIC_API_KEY en el entorno o en .env
 
 En producción: **https://bingo-callejero.netlify.app**
 
-- Netlify inyecta automáticamente la clave de Claude a través de su **AI Gateway** (se consume de los créditos de Netlify), así que no hace falta configurar . Si prefieres usar tu propia clave de Anthropic, añádela en *Project configuration → Environment variables* y tendrá prioridad.
-- Para que cada push a  despliegue solo: *Project configuration → Build & deploy → Link repository* → .
+- Netlify inyecta automáticamente la clave de Claude a través de su **AI Gateway** (se consume de los créditos de Netlify), así que no hace falta configurar `ANTHROPIC_API_KEY`. Si prefieres usar tu propia clave de Anthropic, añádela en *Project configuration → Environment variables* y tendrá prioridad.
+- Para que cada push a `main` despliegue solo: *Project configuration → Build & deploy → Link repository* → `claudiaparraroca-dev/bingo-callejero`.
 
 Coste orientativo del árbitro: ~1.000-1.500 tokens de entrada por foto → del orden de medio céntimo por validación.
 
