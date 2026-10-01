@@ -200,3 +200,126 @@ h1 { font-size: 22px; margin: 0; letter-spacing: -0.02em; font-weight: 800; }
 }
 .mini.has { opacity: 1; }
 .mini img { width: 100%; height: 100%; object-fit: cover; }
+
+/* ── Pestañas (4) ───────────────────────── */
+.tabs { gap: 4px; padding-left: 8px; padding-right: 8px; }
+.tabs button { flex-direction: column; gap: 2px; padding: 8px 4px; font-size: 12px; }
+
+.section-title { display: flex; align-items: center; gap: 8px; font-size: 20px; margin: 10px 0 8px; }
+.small-title { font-size: 16px; margin-top: 24px; }
+.center { text-align: center; margin-top: 10px; }
+.muted { color: var(--muted); }
+.error { color: var(--red); margin: 0; font-size: 14px; }
+.label, .card-form label { font-size: 14px; font-weight: 600; color: var(--muted); }
+.btn:disabled { opacity: 0.5; cursor: default; }
+.btn.ghost { background: var(--asphalt-2); color: var(--text); border: 1px solid var(--line); }
+.btn.danger { color: var(--red); margin-top: 24px; font-size: 14px; padding: 10px; }
+.chip-btn {
+  display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
+  background: var(--asphalt-3); padding: 7px 12px; border-radius: 999px; font-size: 13px; font-weight: 700;
+}
+
+/* ── Onboarding ─────────────────────────── */
+.onboarding { display: flex; flex-direction: column; justify-content: center; gap: 24px; padding-bottom: 32px; }
+.hero { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.hero h1 { font-size: 32px; }
+.hero p { color: var(--muted); margin: 0; line-height: 1.45; }
+.logo.big { width: 76px; height: 76px; font-size: 42px; border-radius: 20px; box-shadow: 5px 5px 0 var(--pink); }
+.card-form { display: flex; flex-direction: column; gap: 10px; }
+.card-form input {
+  font: inherit; font-size: 17px; color: var(--text); background: var(--asphalt-2);
+  border: 2px solid var(--line); border-radius: 12px; padding: 12px 14px; outline: none; width: 100%;
+}
+.card-form input:focus { border-color: var(--yellow); }
+.code-input { text-transform: uppercase; letter-spacing: 0.3em; text-align: center; font-weight: 800; }
+.avatar-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+.avatar-grid button {
+  font-size: 26px; aspect-ratio: 1; border-radius: 12px; background: var(--asphalt-2); border: 2px solid transparent;
+}
+.avatar-grid button.sel { border-color: var(--yellow); background: var(--asphalt-3); }
+
+/* ── Flash ──────────────────────────────── */
+.flash {
+  display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
+  padding: 12px 14px; border-radius: var(--radius); margin: 4px 0 12px;
+  background: var(--asphalt-2); border: 1px solid var(--line);
+}
+.flash-body { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.flash-body span { font-size: 13px; color: var(--muted); line-height: 1.3; }
+.flash-icon { color: var(--yellow); flex-shrink: 0; }
+.flash.done { border-color: rgba(74, 222, 128, 0.4); }
+.flash.done .flash-icon { color: var(--green); }
+.flash.over { opacity: 0.75; }
+.flash.active {
+  background: linear-gradient(135deg, var(--pink), #ff7a45); border: 0; color: #fff;
+  box-shadow: 0 0 0 0 rgba(255, 79, 121, 0.6); animation: pulse 1.6s infinite;
+}
+.flash.active .flash-body span { color: rgba(255, 255, 255, 0.9); }
+.flash.active .flash-icon { color: var(--yellow); }
+.flash-timer { font-size: 24px; font-weight: 800; font-variant-numeric: tabular-nums; }
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(255, 79, 121, 0.6); }
+  70% { box-shadow: 0 0 0 14px rgba(255, 79, 121, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 79, 121, 0); }
+}
+
+/* ── Puntos ─────────────────────────────── */
+.verdict.ok { flex-wrap: wrap; justify-content: space-between; }
+.points-pop {
+  background: var(--yellow); color: #1a1500; font-weight: 800; padding: 4px 12px; border-radius: 999px;
+  animation: pop 0.4s ease;
+}
+
+/* ── Ranking ────────────────────────────── */
+.seg { display: inline-flex; background: var(--asphalt-2); border-radius: 12px; padding: 4px; margin-bottom: 12px; }
+.seg button { padding: 7px 16px; border-radius: 9px; font-weight: 600; color: var(--muted); font-size: 14px; }
+.seg button.on { background: var(--asphalt-3); color: var(--yellow); }
+.rank-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.rank-list li {
+  display: flex; align-items: center; gap: 10px; background: var(--asphalt-2);
+  padding: 10px 14px; border-radius: 12px;
+}
+.rank-list li.me { outline: 2px solid var(--yellow); }
+.rank-list li.gap { background: none; justify-content: center; color: var(--muted); padding: 0; }
+.rank-list .pos { width: 28px; text-align: center; font-weight: 800; color: var(--muted); }
+.rank-list .who { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rank-list .who em { color: var(--muted); font-style: normal; font-size: 13px; }
+.rank-list .pts { font-weight: 800; color: var(--yellow); font-variant-numeric: tabular-nums; }
+
+/* ── Salas ──────────────────────────────── */
+.room-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 16px 0; }
+.room-actions .btn { font-size: 14px; padding: 12px 10px; }
+.room-list { display: flex; flex-direction: column; gap: 8px; }
+.room-card {
+  display: flex; align-items: center; gap: 12px; text-align: left;
+  background: var(--asphalt-2); padding: 14px; border-radius: var(--radius);
+}
+.room-emoji { font-size: 30px; }
+.room-info { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.room-info span { font-size: 13px; color: var(--muted); }
+.room-avatars { font-size: 16px; letter-spacing: -2px; }
+.room-head { display: flex; align-items: center; gap: 6px; margin: 4px 0 8px; }
+.room-title { flex: 1; min-width: 0; }
+.room-title h2 { margin: 0; font-size: 19px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.code { color: var(--yellow); letter-spacing: 0.1em; }
+.room-members { display: flex; flex-wrap: wrap; gap: 4px; font-size: 20px; margin-bottom: 12px; }
+.note { background: var(--asphalt-2); border-left: 3px solid var(--yellow); padding: 12px; border-radius: 8px; font-size: 14px; line-height: 1.4; }
+.theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.theme-opt {
+  display: flex; flex-direction: column; gap: 3px; text-align: left; padding: 12px;
+  background: var(--asphalt-3); border-radius: 12px; border: 2px solid transparent;
+}
+.theme-opt.sel { border-color: var(--yellow); }
+.theme-opt span:last-child { font-size: 12px; color: var(--muted); line-height: 1.3; }
+.theme-emoji { font-size: 24px; }
+.invite {
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center;
+  background: var(--asphalt-2); border: 2px solid var(--yellow); border-radius: var(--radius); padding: 16px; margin-top: 12px;
+}
+.invite-x { position: absolute; top: 6px; right: 6px; }
+.invite-name { font-size: 20px; }
+.invite .btn { margin-top: 6px; }
+
+/* ── Álbum Flash ────────────────────────── */
+.flash-strip { display: flex; gap: 6px; overflow-x: auto; }
+.flash-mini { width: 72px; flex-shrink: 0; }

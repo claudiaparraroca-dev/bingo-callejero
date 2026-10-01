@@ -64,11 +64,10 @@ export const CHALLENGES = [
   { id: 'menu-precio', level: 3, emoji: '☕', text: 'Un café a menos de 1,50 €', hint: 'A menu or price board showing a coffee (café, cortado, etc.) priced below 1.50 EUR.' },
 ]
 
-const BY_LEVEL = [1, 2, 3].map(l => CHALLENGES.filter(c => c.level === l))
 const PICK = { 1: 4, 2: 3, 3: 2 }
 
 // Generador pseudoaleatorio reproducible (mulberry32)
-function rng(seed) {
+export function rng(seed) {
   let a = seed >>> 0
   return () => {
     a = (a + 0x6d2b79f5) >>> 0
@@ -80,7 +79,7 @@ function rng(seed) {
 }
 
 // Hash FNV-1a para que días consecutivos den semillas muy distintas
-function hash(str) {
+export function hash(str) {
   let h = 0x811c9dc5
   for (let i = 0; i < str.length; i++) h = Math.imul(h ^ str.charCodeAt(i), 0x01000193)
   return h >>> 0
@@ -95,8 +94,13 @@ function shuffle(arr, rand) {
   return a
 }
 
-export function cardForDay(dayNumber) {
-  const rand = rng(hash(`bingo-callejero:${dayNumber}`))
-  const picked = [1, 2, 3].flatMap(l => shuffle(BY_LEVEL[l - 1], rand).slice(0, PICK[l]))
+// Cartón de 9 retos a partir de una semilla de texto y un banco de retos
+export function cardFromPool(seed, pool) {
+  const rand = rng(hash(seed))
+  const picked = [1, 2, 3].flatMap(l => shuffle(pool.filter(c => c.level === l), rand).slice(0, PICK[l]))
   return shuffle(picked, rand)
+}
+
+export function cardForDay(dayNumber) {
+  return cardFromPool(`bingo-callejero:${dayNumber}`, CHALLENGES)
 }

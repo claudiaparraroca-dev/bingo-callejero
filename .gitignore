@@ -4,3 +4,4 @@ dev-dist
 .netlify
 .env
 .claude
+deno.lock

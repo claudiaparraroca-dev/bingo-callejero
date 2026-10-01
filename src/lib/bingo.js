@@ -5,29 +5,28 @@ export const LINES = [
 ]
 
 export function completedLines(done) {
-  return LINES.filter(line => line.every(i => done[i]))
-}
-
-// Racha: días seguidos (hasta hoy o ayer) con al menos una línea
-export function stats(progress, todayNumber) {
-  const days = Object.entries(progress).map(([n, d]) => ({ n: Number(n), ...summary(d) }))
-  const played = days.filter(d => d.found > 0)
-  let streak = 0
-  for (let n = todayNumber; ; n--) {
-    const d = days.find(x => x.n === n)
-    if (d && d.lines > 0) streak++
-    else if (n === todayNumber) continue // hoy aún no cuenta en contra
-    else break
-  }
-  return {
-    played: played.length,
-    photos: played.reduce((s, d) => s + d.found, 0),
-    bingos: played.filter(d => d.found === 9).length,
-    streak,
-  }
+  return LINES.filter(line => line.every(i => done[i] != null))
 }
 
 export function summary(day) {
   const done = day?.cells || {}
   return { found: Object.keys(done).length, lines: completedLines(done).length }
+}
+
+// Estadísticas del historial local. Racha: días seguidos con al menos una línea en el cartón del día.
+export function stats(progress, todayNumber) {
+  const all = Object.values(progress).flatMap(b => Object.entries(b.days || {}).map(([n, d]) => ({ n: Number(n), ...summary(d) })))
+  const globalDays = progress.global?.days || {}
+  let streak = 0
+  for (let n = todayNumber; ; n--) {
+    if (summary(globalDays[n]).lines > 0) streak++
+    else if (n === todayNumber) continue // hoy aún no cuenta en contra
+    else break
+  }
+  return {
+    played: new Set(all.filter(d => d.found).map(d => d.n)).size,
+    photos: all.reduce((s, d) => s + d.found, 0),
+    bingos: all.filter(d => d.found === 9).length,
+    streak,
+  }
 }

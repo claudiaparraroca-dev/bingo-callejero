@@ -7,7 +7,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['icon.svg', 'apple-touch-icon-180x180.png'],
+      includeAssets: ['icon.svg', 'apple-touch-icon-180x180.png', 'push-sw.js'],
       manifest: {
         name: 'Bingo Callejero',
         short_name: 'Bingo Callejero',
@@ -27,6 +27,7 @@ export default defineConfig({
       },
       workbox: {
         navigateFallbackDenylist: [/^\/api\//],
+        importScripts: ['push-sw.js'],
         runtimeCaching: [{
           urlPattern: /^https:\/\/fonts\.(googleapis|gstatic)\.com\/.*/,
           handler: 'CacheFirst',

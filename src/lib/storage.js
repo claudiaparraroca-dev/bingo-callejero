@@ -1,14 +1,26 @@
-// Progreso en localStorage (pequeño) y fotos en IndexedDB (pesado).
-// Todo se queda en el móvil del jugador: no hay cuentas ni servidor de fotos.
+// Historial local para el álbum: { [board]: { name, days: { [dayNumber]: { cells: { idx: {at} } } } } }
+// board = 'global' | código de sala. Las fotos van en IndexedDB (pesado), solo en este móvil.
 
-const KEY = 'bc:progress:v1'
+const KEY = 'bc:progress:v2'
+const OLD_KEY = 'bc:progress:v1'
 
 export function loadProgress() {
-  try { return JSON.parse(localStorage.getItem(KEY)) || {} } catch { return {} }
+  try {
+    const v2 = JSON.parse(localStorage.getItem(KEY))
+    if (v2) return v2
+    const v1 = JSON.parse(localStorage.getItem(OLD_KEY)) // versión sin salas
+    return v1 ? { global: { name: 'Cartón del día', days: v1 } } : {}
+  } catch { return {} }
 }
 
 export function saveProgress(progress) {
   try { localStorage.setItem(KEY, JSON.stringify(progress)) } catch { /* modo privado */ }
+}
+
+export function recordCell(progress, board, name, day, idx) {
+  const b = progress[board] || { name, days: {} }
+  const d = b.days[day] || { cells: {} }
+  return { ...progress, [board]: { name, days: { ...b.days, [day]: { cells: { ...d.cells, [idx]: { at: Date.now() } } } } } }
 }
 
 // ── IndexedDB mínimo ────────────────────────────────────
@@ -33,6 +45,7 @@ async function tx(mode, fn) {
   })
 }
 
-export const photoKey = (day, idx) => `${day}:${idx}`
+// El cartón global mantiene las claves antiguas "día:casilla"
+export const photoKey = (board, day, idx) => (board === 'global' ? `${day}:${idx}` : `${board}:${day}:${idx}`)
 export const savePhoto = (key, dataUrl) => tx('readwrite', s => s.put(dataUrl, key)).catch(() => {})
 export const getPhoto = key => tx('readonly', s => s.get(key)).catch(() => null)

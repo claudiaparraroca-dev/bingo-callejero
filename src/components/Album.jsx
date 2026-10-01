@@ -5,10 +5,13 @@ import { getPhoto, photoKey } from '../lib/storage'
 import { summary } from '../lib/bingo'
 
 export default function Album({ progress, todayNumber, stats }) {
-  const days = Object.keys(progress)
-    .map(Number)
-    .filter(n => Object.keys(progress[n].cells || {}).length)
-    .sort((a, b) => b - a)
+  // Una entrada por (cartón, día), de más reciente a más antiguo. El Flash va aparte.
+  const entries = Object.entries(progress)
+    .filter(([board]) => board !== 'flash')
+    .flatMap(([board, b]) => Object.entries(b.days || {}).map(([n, d]) => ({ board, name: b.name, n: Number(n), day: d })))
+    .filter(e => Object.keys(e.day.cells || {}).length)
+    .sort((a, b) => b.n - a.n || (a.board === 'global' ? -1 : 1))
+  const flashDays = Object.keys(progress.flash?.days || {}).map(Number).sort((a, b) => b - a)
 
   return (
     <main className="album">
@@ -19,9 +22,15 @@ export default function Album({ progress, todayNumber, stats }) {
         <Stat n={stats.streak} label="racha 🔥" />
       </div>
 
-      {days.length === 0 && <p className="empty">Aquí irán tus cartones. ¡Haz tu primera foto en la pestaña Hoy!</p>}
+      {flashDays.length > 0 && (
+        <section className="album-day">
+          <header><strong>⚡ Mis Flash</strong><span className="pill">{flashDays.length}</span></header>
+          <div className="flash-strip">{flashDays.map(n => <FlashThumb key={n} n={n} />)}</div>
+        </section>
+      )}
 
-      {days.map(n => <AlbumDay key={n} number={n} day={progress[n]} isToday={n === todayNumber} />)}
+      {entries.length === 0 && <p className="empty">Aquí irán tus cartones. ¡Haz tu primera foto en la pestaña Hoy!</p>}
+      {entries.map(e => <AlbumDay key={`${e.board}-${e.n}`} {...e} isToday={e.n === todayNumber} />)}
     </main>
   )
 }
@@ -30,28 +39,35 @@ function Stat({ n, label }) {
   return <div className="stat"><strong>{n}</strong><span>{label}</span></div>
 }
 
-function AlbumDay({ number, day, isToday }) {
-  const card = cardForDay(number)
+function FlashThumb({ n }) {
+  const [src, setSrc] = useState(null)
+  useEffect(() => { getPhoto(photoKey('flash', n, 0)).then(setSrc) }, [n])
+  return <div className="mini has flash-mini" title={`Cartón #${n}`}>{src ? <img src={src} alt="" /> : '⚡'}</div>
+}
+
+function AlbumDay({ board, name, n, day, isToday }) {
+  // En salas solo mostramos las fotos (el cartón depende de la temática de la sala)
+  const card = board === 'global' ? cardForDay(n) : null
   const [photos, setPhotos] = useState({})
   const { found, lines } = summary(day)
 
   useEffect(() => {
     let alive = true
-    Promise.all(Object.keys(day.cells).map(async i => [i, await getPhoto(photoKey(number, i))]))
+    Promise.all(Object.keys(day.cells).map(async i => [i, await getPhoto(photoKey(board, n, i))]))
       .then(e => alive && setPhotos(Object.fromEntries(e.filter(([, v]) => v))))
     return () => { alive = false }
-  }, [number, found])
+  }, [board, n, found])
 
   return (
     <section className="album-day">
       <header>
-        <strong>#{number}</strong> <span>{isToday ? 'Hoy' : dayLabel(number)}</span>
+        <strong>{board === 'global' ? `#${n}` : name}</strong> <span>{isToday ? 'Hoy' : dayLabel(n)}</span>
         <span className="pill">{found}/9{lines ? ` · ${lines} ${lines === 1 ? 'línea' : 'líneas'}` : ''}</span>
       </header>
       <div className="mini-board">
-        {card.map((c, i) => (
-          <div key={c.id} className={`mini ${photos[i] ? 'has' : ''}`} title={c.text}>
-            {photos[i] ? <img src={photos[i]} alt={c.text} loading="lazy" /> : <span>{c.emoji}</span>}
+        {Array.from({ length: 9 }, (_, i) => (
+          <div key={i} className={`mini ${photos[i] ? 'has' : ''}`} title={card?.[i]?.text}>
+            {photos[i] ? <img src={photos[i]} alt={card?.[i]?.text || ''} loading="lazy" /> : <span>{card?.[i]?.emoji || '·'}</span>}
           </div>
         ))}
       </div>

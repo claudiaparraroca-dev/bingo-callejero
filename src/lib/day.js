@@ -32,3 +32,12 @@ export function dayLabel(number) {
   const d = new Date(EPOCH + (number - 1) * 86400000)
   return d.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' })
 }
+
+// Instante UTC (ms) de una hora concreta de Madrid en la fecha de hoy
+export function madridTodayAt(hour, minute) {
+  const p = madridParts()
+  const guess = Date.UTC(p.y, p.m - 1, p.d, hour, minute)
+  const shown = madridParts(new Date(guess))
+  const offset = Date.UTC(shown.y, shown.m - 1, shown.d, shown.h, shown.min) - guess
+  return guess - offset
+}
